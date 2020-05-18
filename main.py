@@ -20,10 +20,11 @@ def search(g, hidden_next):
 				return i, (j+1)%len(cycle)
 
 def multiple(g1, g2, n):
-
 	g1 = prepare(g1, n)
 	g2 = prepare(g2, n)
-
+	# for identity
+	g1.sort()
+	g2.sort()
 	#start multiple
 	g3 = []	
 	possible_start = [str(i) for i in range(1, n+1)]
@@ -62,14 +63,17 @@ def create_table(g1, g2, n):
 	for i, x in enumerate(table):
 		for j, y in enumerate(table):
 			res = multiple(x, y, n)
+			res.sort()
 			if res not in table:
 				table.append(res)
-	
-	for i, x in enumerate(table):
-		for j, y in enumerate(table):
-			res = multiple(x, y, n)
-			# Tuple created for beautiful output with '('
-			print(f"g{i}*g{j}: {tuple(res)}")	
+
+			pos = table.index(res)
+			print(f"g{i}*g{j} = g{pos}:{res}")
+
+	print("Все итоговые перестановки:")
+
+	for i,x in enumerate(table):
+		print(f"g{i}: {x}")
 
 if __name__ == '__main__':
 	print("""
@@ -86,7 +90,6 @@ if __name__ == '__main__':
 	n = int(input("Введите степень n: "))
 	g1 = input("Введите подстановку g1: ").split(" ")
 	g2 = input("Введите подстановку g2: ").split(" ")
-
 
 	g1 = [ x.split(",") for x in g1]
 	g2 = [ x.split(",") for x in g2]
