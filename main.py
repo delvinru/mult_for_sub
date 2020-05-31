@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# author: Kolesnikov Aleksey KKCO-01-19
+#author: Kolesnikov Alexey KKCO-01-19
 
 # add cycles of length 1
 def prepare(g, n):
@@ -7,9 +7,12 @@ def prepare(g, n):
 	for cycle in g:
 		for el in cycle:
 			control.remove(el)
-	if control:
-		for el in control:
-			g.append(list(el))
+	for el in control:
+		t = []
+		# avoid this case list('15') = ['1', '5']
+		t.append(el)
+		g.append(t)
+	g.sort()
 	return g
 
 def search(g, hidden_next):
@@ -22,12 +25,9 @@ def search(g, hidden_next):
 def multiple(g1, g2, n):
 	g1 = prepare(g1, n)
 	g2 = prepare(g2, n)
-	# for identity
-	g1.sort()
-	g2.sort()
-	#start multiple
 	g3 = []	
 	possible_start = [str(i) for i in range(1, n+1)]
+
 	# tmp arr for 1 cycle
 	tmp = []
 	for k in range(n):
@@ -61,6 +61,7 @@ def create_table(g1, g2, n):
 	table = [epsilon, g1, g2]
 
 	for i, x in enumerate(table):
+		# print("\\\\")
 		for j, y in enumerate(table):
 			res = multiple(x, y, n)
 			res.sort()
@@ -68,10 +69,15 @@ def create_table(g1, g2, n):
 				table.append(res)
 
 			pos = table.index(res)
-			print(f"g{i}*g{j} = g{pos}:{res}")
 
-	print("Все итоговые перестановки:")
+			print(f"g{i}*g{j}=g{pos}: {res}")
+			# Output for tex, except first line.
+			# if pos == 0:
+			# 	print("$\\varepsilon$ & ", end = '')
+			# else:
+			# 	print("$g_"+"{"+str(pos)+"}$ & ", end = '')
 
+	print("\n\nВсе итоговые перестановки:")
 	for i,x in enumerate(table):
 		print(f"g{i}: {x}")
 
@@ -87,7 +93,7 @@ if __name__ == '__main__':
 Если g2=(11 35 17 23), то аналогично g2: 11,35,17,23
 """)
 
-	n = int(input("Введите степень n: "))
+	n = int(input("Введите степень подстановки n: "))
 	g1 = input("Введите подстановку g1: ").split(" ")
 	g2 = input("Введите подстановку g2: ").split(" ")
 
@@ -96,5 +102,7 @@ if __name__ == '__main__':
 
 	# Uncomment this line for simple multiplication
 	# print(multiple(g1, g2, n))
-	# Create table for group
+	# print(multiple(g2, g1, n))
+
+	# Create table for task
 	create_table(g1, g2, n)
